@@ -1,7 +1,12 @@
 package com.ibreakingpoint.liveagent.connect.domain.entity;
 
 import org.springframework.data.annotation.Id;
-
+/**
+ * 
+ * @author JerryLing
+ * @time Nov 11, 2016
+ * @email toiklaun@gmail.com
+ */
 public class AccessTokenEntity{
 	@Id
 	private String id;

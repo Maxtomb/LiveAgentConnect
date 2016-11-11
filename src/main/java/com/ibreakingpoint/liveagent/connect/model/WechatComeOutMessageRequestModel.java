@@ -1,7 +1,12 @@
 package com.ibreakingpoint.liveagent.connect.model;
 
 import java.util.Map;
-
+/**
+ * 
+ * @author JerryLing
+ * @time Nov 11, 2016
+ * @email toiklaun@gmail.com
+ */
 public class WechatComeOutMessageRequestModel {
 	String touser;
 	String msgtype;

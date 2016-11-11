@@ -56,7 +56,7 @@ public class WechatService {
 		restTemplate = new RestTemplate();
 	}
 	/**
-	 * 
+	 * 获取Wechat的AccessToken
 	 * @return
 	 */
 	public String getAccessToken(){
@@ -72,7 +72,10 @@ public class WechatService {
 	    return jsonMap.getString("access_token");
 	}
 	
-	
+	/**
+	 * 从数据库里获取AccessToken
+	 * @return
+	 */
 	public String getAccessTokenFromDatabase(){
 		List<AccessTokenEntity> accessTokenModelList = this.accessTokenRepository.findAll();
 		AccessTokenEntity tokenModel = accessTokenModelList.get(0);
@@ -81,7 +84,7 @@ public class WechatService {
 		return accessToken;
 	}
 	/**
-	 * 
+	 * 调用Wechat API 将消息发送给指定的 微信用户
 	 * @param accessToken
 	 * @param toUser
 	 * @param messageContent
@@ -109,7 +112,7 @@ public class WechatService {
 	}
 	
 	/**
-	 * 
+	 * 根据openid 获取指定的微信用户的详细资料
 	 * @param accessToken
 	 * @param openId
 	 * @return

@@ -29,7 +29,16 @@ public class WechatConnectEndpoint {
 	
 	@Autowired
 	private Connect connect;
-	
+	/**
+	 * 这个方法是微信要求提供的 返回echostr 字符串微信公众平台会认为是开发者身份
+	 * 具体细节请参考微信公众好开发文档
+	 * @param signature
+	 * @param timestamp
+	 * @param nonce
+	 * @param echostr
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
 	@RequestMapping(value="/msg" ,method=RequestMethod.GET)
 	public String authenticate(@RequestParam String signature,
 							   @RequestParam String timestamp,
@@ -37,6 +46,7 @@ public class WechatConnectEndpoint {
 							   @RequestParam String echostr
 								) throws UnsupportedEncodingException {
 		String key ="404 Bad Request";
+		//微信身份校验
 		if(SignUtil.checkSignature(signature, timestamp, nonce)){
 			key = echostr;
 		}
@@ -44,7 +54,12 @@ public class WechatConnectEndpoint {
 		return key;
 		
 	}
-	
+	/**
+	 * msgData里面包含了所有的 微信推过来的数据
+	 * 是整个程序的入口
+	 * @param msgData
+	 * @return
+	 */
 	@RequestMapping(value="/msg" ,method=RequestMethod.POST, produces="application/json")
 	public Object getTextMsg(@RequestBody String msgData) {
 		logger.info("--------Begin----------");
@@ -59,20 +74,4 @@ public class WechatConnectEndpoint {
 		}
 		return null;
 	}
-	
-	@RequestMapping(value="/test" ,method=RequestMethod.GET, produces="application/json")
-	public String test() {
-		logger.info("--------Begin Test----------");
-		try {
-//			String te = LiveAgentService.doChasitorInit();
-//			logger.info(te);
-		} catch (Exception e) {
-			logger.info(e.getMessage());
-			logger.info(e.getStackTrace().toString());
-		}
-		return null;
-	}
-
-	
-	
 }

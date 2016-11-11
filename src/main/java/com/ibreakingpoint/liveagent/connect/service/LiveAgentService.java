@@ -3,7 +3,6 @@ package com.ibreakingpoint.liveagent.connect.service;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +14,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import com.ibreakingpoint.liveagent.connect.domain.ChatSessionRepository;
 import com.ibreakingpoint.liveagent.connect.domain.entity.ChatSessionEntity;
 import com.ibreakingpoint.liveagent.connect.model.LiveAgentSessionIdResponseModel;
-
 import net.sf.json.JSONObject;
 
 /**
- * 
+ * 提供Live Agent 相关服务
  * @author JerryLing
  * @time Nov 8, 2016
  * @email toiklaun@gmail.com
@@ -41,8 +38,8 @@ public class LiveAgentService {
 	private String orgId;
 	@Value("${live_agent.button_id}")
 	private String buttonId;
-	@Value("${live_agent.nickname.prefix}")
-	private String prefix = "微信用户:";
+	@Value("${live_agent.nickname.prefix:微信用户:}")
+	private String prefix;
 	
 	@Autowired
 	private ChatSessionRepository chatSessionRepository;
@@ -50,11 +47,11 @@ public class LiveAgentService {
 	private RestTemplate restTemplate = new RestTemplate();
 	
 	/**
-	 * 创建live agent id
+	 * 调用LiveAgent API SessionId 去初始化Session
 	 * @return
 	 * @throws Exception
 	 */
-	public  LiveAgentSessionIdResponseModel createLiveAgentSession() throws Exception{
+	public  LiveAgentSessionIdResponseModel createLiveAgentSession() {
 		String uri = "https://"+host+"/chat/rest/System/SessionId";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -66,12 +63,13 @@ public class LiveAgentService {
         return sessionResp;
 	}
 	/**
-	 * 创建session 
+	 * 调用 LiveAgent API ChasitorInit 去初始化Session
 	 * @throws Exception 
 	 */
 	public  String doChasitorInit(ChatSessionEntity session,String nickName) throws Exception{
 //		RestTemplate restTemplate = new RestTemplate();
 		String uri = "https://"+host+"/chat/rest/Chasitor/ChasitorInit";
+		//Throw UnsupportedEncodingException
 		String newPrefix= new String(prefix.getBytes("ISO-8859-1"),"utf-8");
 		String fullName = newPrefix+nickName;
 		HttpHeaders headers = new HttpHeaders();
@@ -100,7 +98,7 @@ public class LiveAgentService {
         return resp.getBody();
 	}
 	/**
-	 * 
+	 * 调用 LiveAgent API ChatMessage 将消息发送给LiveAgent
 	 * @param message
 	 * @throws Exception
 	 */
@@ -119,7 +117,7 @@ public class LiveAgentService {
 		restTemplate.exchange(uri,HttpMethod.POST,entity,String.class);
 	}
 	/**
-	 * 
+	 * 调用 LiveAgent API Message 从LiveAgent获取消息
 	 * @param session
 	 * @return
 	 */
@@ -137,15 +135,29 @@ public class LiveAgentService {
         return msgModel;
 	}
 	
+	/**
+	 * 数据库查询 该openid 是否存在 对应的session
+	 * @param openId
+	 * @return
+	 */
 	public ChatSessionEntity searchIfSessionExist(String openId){
 		ChatSessionEntity session = this.chatSessionRepository.findByOpenIdAndSessionCreated(openId,true);
 		return session;
 	}
 	
+	/**
+	 * 数据库插入chatsession 模型
+	 * @param session
+	 * @return
+	 */
 	public ChatSessionEntity saveSession(ChatSessionEntity session){
 		 return this.chatSessionRepository.save(session);
 	}
 	
+	/**
+	 * 数据库删除指定的 chatsession纪录
+	 * @param session
+	 */
 	public void deleteSession(ChatSessionEntity session){
 		 this.chatSessionRepository.delete(session);
 	}

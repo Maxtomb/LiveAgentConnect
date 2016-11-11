@@ -23,6 +23,7 @@ import com.ibreakingpoint.liveagent.connect.service.WechatService;
 @Component
 @EnableScheduling
 public class ScheduledTasks{
+	
 	private static final Logger logger  = LoggerFactory.getLogger(ScheduledTasks.class); 
 	//使用wechat服务来获取access_token
 	@Autowired
@@ -31,6 +32,10 @@ public class ScheduledTasks{
 	@Autowired
 	private AccessTokenRepository accessTokenRepo;
 	
+	/**
+	 * 这个方法Spring Schedule机制会自动调用 每间隔 一段时间就会刷新一下 访问微信的accesstoken
+	 * 因为 AccessToken 是两个小时到期所以 建议 刷新时间不要大于两个小时
+	 */
     @Scheduled(fixedDelayString="${access_token_refresh_interval.setup}") //cron = "* 0/1 *  * * * "
     public void refreshToken(){
        logger.info("The new Job has been setup");
