@@ -15,6 +15,7 @@ Prerequisites:
 配置文件
 	application.properties
 
-有问题请联系
+
 演示地址:http://blog.leanote.com/maxtomb
+有问题请联系:
 toiklaun@gmail.com
