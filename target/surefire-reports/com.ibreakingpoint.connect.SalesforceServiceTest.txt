@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.ibreakingpoint.connect.SalesforceServiceTest
--------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.817 sec - in com.ibreakingpoint.connect.SalesforceServiceTest
