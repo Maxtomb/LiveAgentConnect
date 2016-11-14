@@ -16,6 +16,6 @@ Prerequisites:
 	application.properties
 
 
-演示地址:http://blog.leanote.com/maxtomb/LiveAgentConnect
+演示地址:http://blog.leanote.com/post/maxtomb/LiveAgentConnect
 有问题请联系:
 toiklaun@gmail.com
