@@ -47,6 +47,8 @@ public class LiveAgentService {
 	private String buttonId;
 	@Value("${live_agent.nickname.prefix:微信用户:}")
 	private String prefix;
+	@Value("${live_agent.api.version:29}")
+	private String apiVersion;
 	
 	@Autowired
 	private ChatSessionRepository chatSessionRepository;
@@ -62,7 +64,7 @@ public class LiveAgentService {
 		String uri = "https://"+host+"/chat/rest/System/SessionId";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-LIVEAGENT-API-VERSION","37");
+        headers.set("X-LIVEAGENT-API-VERSION",apiVersion);
         headers.set("X-LIVEAGENT-AFFINITY", "null");
         HttpEntity<String> entity = new HttpEntity<String>("", headers);
         HttpEntity<LiveAgentSessionIdResponseModel> response = restTemplate.exchange(uri,HttpMethod.GET,entity,LiveAgentSessionIdResponseModel.class);
@@ -81,7 +83,7 @@ public class LiveAgentService {
 		String fullName = newPrefix+nickName;
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");  
-        headers.set("X-LIVEAGENT-API-VERSION","37");
+        headers.set("X-LIVEAGENT-API-VERSION",apiVersion);
         headers.set("X-LIVEAGENT-SESSION-KEY",session.getSessionKey());
         headers.set("X-LIVEAGENT-AFFINITY",session.getAffinityToken());
         headers.set("X-LIVEAGENT-SEQUENCE","1");
@@ -153,7 +155,7 @@ public class LiveAgentService {
 		String uri = "https://"+host+"/chat/rest/Chasitor/ChatMessage";
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");  
-        headers.set("X-LIVEAGENT-API-VERSION","37");
+        headers.set("X-LIVEAGENT-API-VERSION",apiVersion);
         headers.set("X-LIVEAGENT-SESSION-KEY",session.getSessionKey());
         headers.set("X-LIVEAGENT-AFFINITY",session.getAffinityToken());
 		Map<String,Object> requestJson = new LinkedHashMap<String,Object>();
@@ -173,7 +175,7 @@ public class LiveAgentService {
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Content-Type", "application/x-www-form-urlencoded;charset=utf-8"); 
-        headers.set("X-LIVEAGENT-API-VERSION","37");
+        headers.set("X-LIVEAGENT-API-VERSION",apiVersion);
         headers.set("X-LIVEAGENT-SESSION-KEY",session.getSessionKey());
         headers.set("X-LIVEAGENT-AFFINITY",session.getAffinityToken());
         HttpEntity<String> entity = new HttpEntity<String>("", headers);

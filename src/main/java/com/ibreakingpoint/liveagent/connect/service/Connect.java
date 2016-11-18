@@ -58,6 +58,10 @@ public class Connect {
 			chatSession.setSessionKey(sessionKey);
 			chatSession.setAffinityToken(affinityToken);
 			Map<String,Object> userRespMap = wechatService.getWechatUserInfo(m.getFromUserName());
+			if("40001".equals(userRespMap.get("errorCode"))){
+				wechatService.refreshToken();
+				userRespMap = wechatService.getWechatUserInfo(m.getFromUserName());
+			}
 			String nickName = userRespMap.get("nickname")!=null?userRespMap.get("nickname").toString():"匿名用户";
 			String from = " 来自:["+userRespMap.get("country")+","+userRespMap.get("province")+","+userRespMap.get("city")+"]";
 			String resps = liveAgentService.doChasitorInit(chatSession,nickName+from);
