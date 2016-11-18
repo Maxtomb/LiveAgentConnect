@@ -17,7 +17,6 @@
 package com.ibreakingpoint.liveagent.connect;
 
 import org.apache.catalina.connector.Connector;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
@@ -25,7 +24,6 @@ import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletCon
 import org.springframework.context.annotation.Bean;
 import org.springframework.util.SocketUtils;
 
-import com.ibreakingpoint.liveagent.connect.domain.ChatSessionRepository;
 /**
  * 
  * @author JerryLing

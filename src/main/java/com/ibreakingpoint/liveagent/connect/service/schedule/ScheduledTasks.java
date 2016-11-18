@@ -1,18 +1,12 @@
 package com.ibreakingpoint.liveagent.connect.service.schedule;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.ibreakingpoint.liveagent.connect.domain.AccessTokenRepository;
-import com.ibreakingpoint.liveagent.connect.domain.entity.AccessTokenEntity;
 import com.ibreakingpoint.liveagent.connect.service.WechatService;
 /**
  * 该类用于自动刷新微信的access_token到数据库里
