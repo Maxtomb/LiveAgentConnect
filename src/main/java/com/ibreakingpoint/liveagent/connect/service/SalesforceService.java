@@ -133,4 +133,9 @@ public class SalesforceService {
 	    ResponseEntity<Map> resp = restTemplate.exchange(url,HttpMethod.GET,entity,Map.class,queryMap);
 	    return resp.getBody();
 	}
+	
+	/**
+	 * 向指定的sobject里面
+	 */
+	
 }

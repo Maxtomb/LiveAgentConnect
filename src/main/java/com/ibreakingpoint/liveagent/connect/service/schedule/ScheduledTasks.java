@@ -28,9 +28,6 @@ public class ScheduledTasks{
 	//使用wechat服务来获取access_token
 	@Autowired
 	private WechatService wService;
-	//使用AccessTokenRepository来向数据库mongodb 的AccessTokenRefreshModel collection里面
-	@Autowired
-	private AccessTokenRepository accessTokenRepo;
 	
 	/**
 	 * 这个方法Spring Schedule机制会自动调用 每间隔 一段时间就会刷新一下 访问微信的accesstoken
@@ -39,17 +36,10 @@ public class ScheduledTasks{
     @Scheduled(fixedDelayString="${access_token_refresh_interval.setup}") //cron = "* 0/1 *  * * * "
     public void refreshToken(){
        logger.info("The new Job has been setup");
-       String token = wService.getAccessToken();
-       AccessTokenEntity model = new AccessTokenEntity();
-       model.setAccess_token(token);
-       model.setCreatedDate(dateFormat().format(new Date()));
-       this.accessTokenRepo.deleteAll();
-       this.accessTokenRepo.save(model);
+       String token = wService.refreshToken();
        logger.info("["+token+"] Access Token Refreshed..");
     }
 
-    private SimpleDateFormat dateFormat(){
-        return new SimpleDateFormat ("HH:mm:ss");
-    }
+   
     
 }

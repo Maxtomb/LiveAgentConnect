@@ -24,9 +24,9 @@ public class Connect {
 	
 	private LiveAgentService liveAgentService;
 	private WechatService wechatService;
-
+	private SalesforceService salesforceService;
 	@Autowired
-	public Connect(LiveAgentService liveAgentService,WechatService wechatService){
+	public Connect(LiveAgentService liveAgentService,WechatService wechatService,SalesforceService salesforceService){
 		this.liveAgentService = liveAgentService;
 		this.wechatService =  wechatService;
 	}
@@ -59,7 +59,7 @@ public class Connect {
 			chatSession.setAffinityToken(affinityToken);
 			Map<String,Object> userRespMap = wechatService.getWechatUserInfo(m.getFromUserName());
 			String nickName = userRespMap.get("nickname")!=null?userRespMap.get("nickname").toString():"匿名用户";
-			String from = " From:["+userRespMap.get("province")+","+userRespMap.get("city")+"]";
+			String from = " 来自:["+userRespMap.get("country")+","+userRespMap.get("province")+","+userRespMap.get("city")+"]";
 			String resps = liveAgentService.doChasitorInit(chatSession,nickName+from);
 			if("OK".equals(resps)){
 				chatSession.setSessionCreated(true);

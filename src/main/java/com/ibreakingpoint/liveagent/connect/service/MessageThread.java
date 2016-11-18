@@ -27,6 +27,7 @@ public class MessageThread extends Thread {
 	private LiveAgentService liveAgentService;
 	private ChatSessionEntity session;
 	private boolean flag = true;
+	
 	public MessageThread(LiveAgentService liveAgentService, WechatService wechatService,
 			ChatSessionEntity session) {
 		this.liveAgentService = liveAgentService;
@@ -55,6 +56,17 @@ public class MessageThread extends Thread {
 							String agentId = mdMap.get("agentId").toString();
 							String openId = session.getOpenId();
 							String res = wechatService.sendMessageToOpenId(openId, text, "text");
+							int i = 0;
+							while(res.contains("40001") && i<3){
+								logger.info("[40001] token expired.");
+								wechatService.refreshToken();
+								logger.info("token reset.");
+								res = wechatService.sendMessageToOpenId(openId, text, "text");
+								logger.info("resend the message. ["+ i+"]");
+								i++;
+								Thread.sleep(i*3000);
+								continue;
+							}
 							logger.info("[ThreadManager] Thread Count:"+ThreadManagerService.getThreadCount());
 							logger.info("[ChatMessage] to ["+openId+"] content["+text+"] res:"+res);
 						}
@@ -73,6 +85,16 @@ public class MessageThread extends Thread {
 							flag = false;
 							session.setSessionCreated(false);
 							logger.info("[ChatEnded]");
+							ThreadManagerService.removeThread(session.getOpenId());
+							logger.info("[ThreadManager] Thread Removed , Thread Count:"+ThreadManagerService.getThreadCount());
+							liveAgentService.deleteSession(session);
+							logger.info("[Session Removed]");
+							Thread.currentThread().interrupt();
+						}
+						if("ChatRequestFail".equals(messageMap.get("type"))){
+							flag = false;
+							session.setSessionCreated(false);
+							logger.info("[ChatRequestFail]");
 							ThreadManagerService.removeThread(session.getOpenId());
 							logger.info("[ThreadManager] Thread Removed , Thread Count:"+ThreadManagerService.getThreadCount());
 							liveAgentService.deleteSession(session);

@@ -1,8 +1,11 @@
 package com.ibreakingpoint.liveagent.connect.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +17,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 import com.ibreakingpoint.liveagent.connect.domain.ChatSessionRepository;
 import com.ibreakingpoint.liveagent.connect.domain.entity.ChatSessionEntity;
 import com.ibreakingpoint.liveagent.connect.model.LiveAgentSessionIdResponseModel;
+import com.ibreakingpoint.liveagent.connect.model.PrechatDetailModel;
+import com.ibreakingpoint.liveagent.connect.model.PrechatEntityModel;
+
 import net.sf.json.JSONObject;
 
 /**
@@ -88,13 +95,53 @@ public class LiveAgentService {
         requestJson.put("language", "en-US");
         requestJson.put("screenResolution", "2560x1440");
         requestJson.put("visitorName", fullName);
-        requestJson.put("prechatDetails", new ArrayList<Object>());
-        requestJson.put("prechatEntities", new ArrayList<Object>());
+	        List<Object> abc = new ArrayList<Object>();
+		        PrechatDetailModel detail = new PrechatDetailModel();
+		        detail.setLabel("LastName");
+		        detail.setValue("onw0Tt_fbdqQNw52EmOf4FDpP_64");
+		        detail.setDisplayToAgent(true);
+		        detail.setTranscriptFields(new String[]{});
+			        Map<String,Object> entityMap = new HashMap<String,Object>();
+			        entityMap.put("entityName", "Account");
+			        entityMap.put("fieldName", "LastName");
+			        List<Map<String,Object>> entityMaps = new ArrayList<Map<String,Object>>();
+			        entityMaps.add(entityMap);
+		        detail.setEntityMaps(entityMaps);
+		        PrechatDetailModel detail2 = new PrechatDetailModel();
+		        detail2.setLabel("Hello");
+		        detail2.setValue("world");
+		        detail2.setDisplayToAgent(true);
+		        detail2.setTranscriptFields(new String[]{});
+		        detail2.setEntityMaps(new ArrayList());
+	        abc.add(detail);
+	        abc.add(detail2);
+        requestJson.put("prechatDetails",abc);
+	        List<Object> prechatEntityList = new ArrayList<Object>();
+	        PrechatEntityModel entityModel = new PrechatEntityModel();
+	        entityModel.setEntityName("Account");
+	        entityModel.setSaveToTranscript("");
+	        entityModel.setLinkToEntityName("");
+	        entityModel.setLinkToEntityField("");
+		        Map<String,Object> entityFieldMap = new HashMap<String,Object>();
+		        entityFieldMap.put("fieldName", "LastName");
+		        entityFieldMap.put("label", "LastName");
+		        entityFieldMap.put("doFind", true);
+		        entityFieldMap.put("isExactMatch", true);
+		        entityFieldMap.put("doCreate", true);
+		        List<Map<String,Object>> entityFieldMaps = new ArrayList<Map<String,Object>>();
+		        entityFieldMaps.add(entityMap);
+		    entityModel.setEntityFieldsMaps(entityFieldMaps);
+		        
+	        prechatEntityList.add(entityModel);
+        
+        requestJson.put("prechatEntities",prechatEntityList);
         requestJson.put("receiveQueueUpdates", true);
         requestJson.put("isPost", true);
         JSONObject jsonMap = JSONObject.fromObject(requestJson);
+        logger.info(jsonMap.toString());
         HttpEntity<String> entity = new HttpEntity<String>(jsonMap.toString(), headers);
         ResponseEntity<String> resp = restTemplate.exchange(uri,HttpMethod.POST,entity,String.class);
+        logger.info(resp.getBody().toString());
         return resp.getBody();
 	}
 	/**
@@ -162,3 +209,5 @@ public class LiveAgentService {
 		 this.chatSessionRepository.delete(session);
 	}
 }	
+
+

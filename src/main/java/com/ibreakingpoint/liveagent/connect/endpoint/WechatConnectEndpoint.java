@@ -74,4 +74,11 @@ public class WechatConnectEndpoint {
 		}
 		return null;
 	}
+	
+	@RequestMapping(value="/test" ,method=RequestMethod.GET, produces="application/json")
+	public Object test(@RequestBody String msgData) {
+		logger.info("Test");
+		
+		return "Hello Test";
+	}
 }
